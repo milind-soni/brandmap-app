@@ -11,7 +11,7 @@ export default function Homepage() {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -19,10 +19,10 @@ export default function Homepage() {
     <div className="min-h-screen font-mono selection:bg-[#8b4513] selection:text-[#f0f0e8]">
       {/* Nav */}
       <nav
-        className={`fixed w-full top-0 z-50 px-6 py-4 flex justify-between items-center transition-all duration-200 ${
+        className={`fixed w-full top-0 z-50 px-6 py-4 flex justify-between items-center border-b-2 transition-[background-color,color,border-color] duration-200 ${
           scrolled
-            ? "bg-[#f0f0e8] text-[#1a1a1a] border-b-2 border-[#1a1a1a]"
-            : "bg-transparent text-[#f0f0e8] drop-shadow-md"
+            ? "bg-[#f0f0e8] text-[#1a1a1a] border-[#1a1a1a]"
+            : "bg-transparent text-[#f0f0e8] border-transparent drop-shadow-md"
         }`}
       >
         <div className="flex items-center gap-4">
@@ -161,8 +161,8 @@ export default function Homepage() {
             {[
               {
                 step: "1",
-                action: "PICK",
-                desc: "Search for your location or drop a pin on the map.",
+                action: "PROMPT",
+                desc: "Describe your map. Location, style, vibe. We handle the rest.",
               },
               {
                 step: "2",
