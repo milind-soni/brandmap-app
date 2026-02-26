@@ -17,26 +17,7 @@ export function HeroMap() {
 
       const map = new Map({
         container: containerRef.current,
-        style: {
-          version: 8,
-          sources: {
-            osm: {
-              type: "raster",
-              tiles: [
-                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-              ],
-              tileSize: 256,
-              attribution: "&copy; OpenStreetMap",
-            },
-          },
-          layers: [
-            {
-              id: "osm",
-              type: "raster",
-              source: "osm",
-            },
-          ],
-        },
+        style: "https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json",
         center: [-73.985, 40.748],
         zoom: 13,
         pitch: 45,
@@ -86,7 +67,7 @@ export function HeroMap() {
           width: "100%",
           height: "100%",
           filter:
-            "saturate(0) brightness(0.4) sepia(0.4) hue-rotate(-10deg)",
+            "brightness(0.7) sepia(0.2)",
           opacity: loaded ? 1 : 0,
           transition: "opacity 1.5s ease-in",
         }}
