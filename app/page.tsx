@@ -206,11 +206,11 @@ export default function Homepage() {
       <section className="px-6 py-32 bg-[#8b4513] text-[#f0f0e8] border-b-2 border-[#1a1a1a]">
         <div className="max-w-5xl mx-auto text-center">
           <blockquote className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-tight mb-8">
-            &ldquo;Our map used to look like every other Google Maps embed.
-            Now it actually matches our menu.&rdquo;
+            &ldquo;I dragged, dropped, and prompted some data.
+            It gave me a beautiful map.&rdquo;
           </blockquote>
           <div className="inline-block border-2 border-[#f0f0e8] px-6 py-3 font-bold uppercase tracking-wider">
-            &mdash; A restaurant that got it
+            &mdash; An early user
           </div>
         </div>
       </section>
