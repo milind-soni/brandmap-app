@@ -31,7 +31,7 @@ export default function Homepage() {
               scrolled ? "opacity-100" : "opacity-0"
             }`}
           >
-            brandmap.
+            factmaps.
           </span>
         </div>
         <div className="flex gap-6 items-center text-sm font-bold uppercase tracking-wide">
@@ -66,9 +66,9 @@ export default function Homepage() {
               textShadow: "8px 8px 0 #8b4513, 0 20px 40px rgba(0,0,0,0.5)",
             }}
           >
-            brand
+            fact
             <br />
-            map
+            maps
           </h1>
 
           <div className="flex flex-col lg:flex-row lg:justify-between lg:items-end gap-12 mt-20 md:mt-24">
@@ -264,7 +264,7 @@ export default function Homepage() {
                   </li>
                   <li className="flex items-center gap-3">
                     <span className="text-[#cd8c52] text-2xl">&#10003;</span>{" "}
-                    No brandmap branding
+                    No factmaps branding
                   </li>
                 </ul>
 
@@ -284,7 +284,7 @@ export default function Homepage() {
       <footer className="border-t-2 border-[#1a1a1a] px-6 py-12 bg-[#e8e8e0]">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <span className="font-black text-3xl tracking-tighter">
-            brandmap.
+            factmaps.
           </span>
           <div className="flex gap-8 text-sm font-bold uppercase tracking-wider">
             <a
