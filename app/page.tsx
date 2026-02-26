@@ -75,12 +75,12 @@ export default function Homepage() {
             <div className="flex flex-col items-start gap-4 md:gap-6 max-w-full">
               <div className="bg-[#f0f0e8] text-[#1a1a1a] px-5 py-3 md:px-8 md:py-4 border-2 border-[#1a1a1a] shadow-[6px_6px_0px_0px_var(--shadow-accent)] md:shadow-[8px_8px_0px_0px_var(--shadow-accent)] -rotate-2 origin-bottom-left max-w-full">
                 <p className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight uppercase leading-tight md:leading-none">
-                  Beautiful maps that match your brand.
+                  Beautiful maps created with AI.
                 </p>
               </div>
               <div className="bg-[#8b4513] text-[#f0f0e8] px-5 py-3 md:px-8 md:py-4 border-2 border-[#1a1a1a] shadow-[6px_6px_0px_0px_var(--shadow-color)] md:shadow-[8px_8px_0px_0px_var(--shadow-color)] rotate-1 origin-top-left ml-2 md:ml-8 max-w-full">
                 <p className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight uppercase leading-tight md:leading-none">
-                  No code. No Mapbox. Just paste the embed.
+                  One prompt. Embed anywhere.
                 </p>
               </div>
             </div>
