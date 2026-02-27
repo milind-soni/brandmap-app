@@ -7,7 +7,7 @@ import { compressToEncodedURIComponent } from "lz-string";
 interface EmbedModalProps {
   open: boolean;
   onClose: () => void;
-  spec: Record<string, unknown>;
+  spec: object;
 }
 
 export function EmbedModal({ open, onClose, spec }: EmbedModalProps) {
