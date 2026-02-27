@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.48",
+    "@prisma/client": "^6",
     "ai": "^6.0.103",
+    "better-auth": "^1.4.19",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "json-maps": "^0.3.0",
@@ -32,6 +34,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "postcss": "^8.5.6",
+    "prisma": "^6",
     "puppeteer": "^24.37.5",
     "tailwindcss": "^4.2.1",
     "typescript": "^5.9.3"

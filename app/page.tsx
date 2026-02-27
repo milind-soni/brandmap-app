@@ -2,10 +2,14 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { HeroMap } from "@/components/hero-map";
+import { authClient } from "@/lib/auth-client";
 
 export default function Homepage() {
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
+  const { data: session } = authClient.useSession();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,19 +42,45 @@ export default function Homepage() {
           <a href="#pricing" className="hover:underline underline-offset-4">
             Pricing
           </a>
-          <Link href="/sign-in" className="hover:underline underline-offset-4">
-            Log in
-          </Link>
-          <Link
-            href="/editor"
-            className={`px-4 py-2 border-2 transition-colors ${
-              scrolled
-                ? "border-[#1a1a1a] hover:bg-[#1a1a1a] hover:text-[#f0f0e8]"
-                : "border-[#f0f0e8] hover:bg-[#f0f0e8] hover:text-[#1a1a1a]"
-            }`}
-          >
-            Start
-          </Link>
+          {session ? (
+            <>
+              <button
+                onClick={async () => {
+                  await authClient.signOut();
+                  router.refresh();
+                }}
+                className="hover:underline underline-offset-4"
+              >
+                Sign out
+              </button>
+              <Link
+                href="/editor"
+                className={`px-4 py-2 border-2 transition-colors ${
+                  scrolled
+                    ? "border-[#1a1a1a] hover:bg-[#1a1a1a] hover:text-[#f0f0e8]"
+                    : "border-[#f0f0e8] hover:bg-[#f0f0e8] hover:text-[#1a1a1a]"
+                }`}
+              >
+                Editor
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link href="/sign-in" className="hover:underline underline-offset-4">
+                Log in
+              </Link>
+              <Link
+                href="/sign-up"
+                className={`px-4 py-2 border-2 transition-colors ${
+                  scrolled
+                    ? "border-[#1a1a1a] hover:bg-[#1a1a1a] hover:text-[#f0f0e8]"
+                    : "border-[#f0f0e8] hover:bg-[#f0f0e8] hover:text-[#1a1a1a]"
+                }`}
+              >
+                Start
+              </Link>
+            </>
+          )}
         </div>
       </nav>
 
