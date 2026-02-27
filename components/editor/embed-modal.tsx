@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { X, Check, Copy } from "lucide-react";
+import { compressToEncodedURIComponent } from "lz-string";
 
 interface EmbedModalProps {
   open: boolean;
@@ -14,12 +15,16 @@ export function EmbedModal({ open, onClose, spec }: EmbedModalProps) {
 
   if (!open) return null;
 
-  const specJson = JSON.stringify(spec, null, 2);
-  const embedCode = `<div id="factmap"></div>
-<script src="https://unpkg.com/json-maps@latest/dist/embed.js"></script>
-<script>
-  JsonMaps.render('#factmap', ${specJson});
-</script>`;
+  const compressed = compressToEncodedURIComponent(JSON.stringify(spec));
+  const embedUrl = `https://jsonmaps.dev/embed#${compressed}`;
+
+  const embedCode = `<iframe
+  src="${embedUrl}"
+  width="100%"
+  height="500"
+  style="border: none; border-radius: 8px;"
+  loading="lazy"
+></iframe>`;
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(embedCode);
@@ -75,8 +80,7 @@ export function EmbedModal({ open, onClose, spec }: EmbedModalProps) {
         {/* Footer */}
         <div className="px-6 py-4 border-t-2 border-[#1a1a1a]">
           <p className="text-xs text-[#888] font-medium">
-            The embed renders a fully interactive map. No API key needed for
-            viewing.
+            The embed renders a fully interactive map via jsonmaps.dev. No API key needed.
           </p>
         </div>
       </div>

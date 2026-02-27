@@ -42,7 +42,7 @@ export default function Homepage() {
             Log in
           </Link>
           <Link
-            href="/sign-up"
+            href="/editor"
             className={`px-4 py-2 border-2 transition-colors ${
               scrolled
                 ? "border-[#1a1a1a] hover:bg-[#1a1a1a] hover:text-[#f0f0e8]"
@@ -95,7 +95,7 @@ export default function Homepage() {
                 </span>
               </div>
               <Link
-                href="/sign-up"
+                href="/editor"
                 className="bg-[#8b4513] text-[#f0f0e8] px-6 py-4 md:px-8 md:py-5 border-2 border-[#1a1a1a] font-black text-lg md:text-xl hover:bg-[#a0522d] transition-colors flex items-center justify-center shadow-[6px_6px_0px_0px_var(--shadow-color)] md:shadow-[8px_8px_0px_0px_var(--shadow-color)] hover:translate-y-[2px] hover:translate-x-[2px] hover:shadow-[4px_4px_0px_0px_var(--shadow-color)] md:hover:shadow-[6px_6px_0px_0px_var(--shadow-color)] self-start sm:self-auto"
               >
                 START FREE TRIAL &rarr;
@@ -269,7 +269,7 @@ export default function Homepage() {
                 </ul>
 
                 <Link
-                  href="/sign-up"
+                  href="/editor"
                   className="bg-[#8b4513] text-[#f0f0e8] text-center py-5 border-2 border-[#8b4513] font-black text-xl uppercase hover:bg-[#a0522d] transition-colors"
                 >
                   Get Started
