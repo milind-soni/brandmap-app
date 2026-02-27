@@ -7,11 +7,12 @@
       "dependencies": {
         "@ai-sdk/anthropic": "^3.0.48",
         "@prisma/client": "^6",
+        "@supabase/supabase-js": "^2.98.0",
         "ai": "^6.0.103",
         "better-auth": "^1.4.19",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
-        "json-maps": "^0.3.0",
+        "json-maps": "0.3.2",
         "lucide-react": "^0.575.0",
         "lz-string": "^1.5.0",
         "maplibre-gl": "^5.19.0",
@@ -655,7 +656,7 @@
 
     "js-yaml": ["js-yaml@4.1.1", "", { "dependencies": { "argparse": "^2.0.1" }, "bin": { "js-yaml": "bin/js-yaml.js" } }, "sha512-qQKT4zQxXl8lLwBtHMWwaTcGfFOZviOJet3Oy/xmGk2gZH677CJM9EvtfdSkgWcATZhj/55JZ0rmy3myCT5lsA=="],
 
-    "json-maps": ["json-maps@0.3.0", "", { "dependencies": { "@ai-sdk/react": "^3.0.99", "@radix-ui/react-dialog": "^1.1.15", "@streamdown/code": "^1.0.3", "@supabase/supabase-js": "^2.97.0", "@tailwindcss/typography": "^0.5.19", "bash-tool": "^1.3.15", "clsx": "^2.1.1", "hyparquet": "^1.25.0", "hyparquet-compressors": "^1.1.1", "lucide-react": ">=0.300", "pmtiles": "^4.4.0", "streamdown": "^2.3.0", "tailwind-merge": "^3.4.0", "zod": "^4.3.6" }, "peerDependencies": { "@ai-sdk/anthropic": ">=3", "ai": ">=4", "maplibre-gl": ">=4", "react": ">=18", "react-dom": ">=18" }, "optionalPeers": ["@ai-sdk/anthropic", "ai"] }, "sha512-9giupREVhITPA5VSK0jCXYQusVlSVa+r3lzPbw8gMFb2/ioXwIhGgcCdmxtPO0QSR53cHk2HOW77on3Aj6vogQ=="],
+    "json-maps": ["json-maps@0.3.2", "", { "dependencies": { "@ai-sdk/react": "^3.0.99", "@radix-ui/react-dialog": "^1.1.15", "@streamdown/code": "^1.0.3", "@supabase/supabase-js": "^2.97.0", "@tailwindcss/typography": "^0.5.19", "bash-tool": "^1.3.15", "clsx": "^2.1.1", "hyparquet": "^1.25.0", "hyparquet-compressors": "^1.1.1", "lucide-react": ">=0.300", "pmtiles": "^4.4.0", "streamdown": "^2.3.0", "tailwind-merge": "^3.4.0", "zod": "^4.3.6" }, "peerDependencies": { "@ai-sdk/anthropic": ">=3", "ai": ">=4", "maplibre-gl": ">=4", "react": ">=18", "react-dom": ">=18" }, "optionalPeers": ["@ai-sdk/anthropic", "ai"] }, "sha512-DLBXxWd+SpqSNJG14n5dzkoYzCGq6Z6fit3/rwoi6oJmMiBbgZC784nFcOHp5f6QTGTMZaGcp+SQXNOMcM6cYQ=="],
 
     "json-parse-even-better-errors": ["json-parse-even-better-errors@2.3.1", "", {}, "sha512-xyFwyhro/JEof6Ghe2iz2NcXoj2sloNsWr/XsERDK/oiPCfaNhl5ONfp+jQdAZRQQ0IJWNzH9zIZF7li91kh2w=="],
 

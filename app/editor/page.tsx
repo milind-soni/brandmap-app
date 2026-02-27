@@ -12,7 +12,7 @@ export default function EditorPage() {
   const [embedOpen, setEmbedOpen] = useState(false);
   const [hasGenerated, setHasGenerated] = useState(false);
 
-  const { spec, isStreaming, streamText, send, stop } = useMapStream({
+  const { spec, isStreaming, streamText, toolCalls, send, stop } = useMapStream({
     api: "/api/generate",
     onComplete: () => setHasGenerated(true),
   });
@@ -73,6 +73,7 @@ export default function EditorPage() {
             messages={messages}
             isStreaming={isStreaming}
             streamText={streamText}
+            toolCalls={toolCalls}
             onSend={handleSend}
             onStop={handleStop}
           />

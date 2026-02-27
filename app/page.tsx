@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { HeroMap } from "@/components/hero-map";
+import { EmailSignup } from "@/components/email-signup";
 import { authClient } from "@/lib/auth-client";
 
 export default function Homepage() {
@@ -307,6 +308,21 @@ export default function Homepage() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Email CTA */}
+      <section className="border-b-2 border-[#1a1a1a] bg-[#1a1a1a] text-[#f0f0e8] px-6 py-24 md:py-32">
+        <div className="max-w-3xl mx-auto text-center flex flex-col items-center gap-8">
+          <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none">
+            STAY IN
+            <br />
+            THE LOOP.
+          </h2>
+          <p className="text-lg font-medium text-[#888] max-w-md">
+            Get updates on new features, map styles, and early access to what we&apos;re building next.
+          </p>
+          <EmailSignup source="factmaps" />
         </div>
       </section>
 

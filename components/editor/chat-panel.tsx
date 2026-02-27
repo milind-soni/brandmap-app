@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Send, Square, Loader2 } from "lucide-react";
+import type { ToolCall } from "json-maps";
 
 export interface ChatMessage {
   role: "user" | "assistant";
@@ -12,6 +13,7 @@ interface ChatPanelProps {
   messages: ChatMessage[];
   isStreaming: boolean;
   streamText: string;
+  toolCalls: ToolCall[];
   onSend: (prompt: string) => void;
   onStop: () => void;
 }
@@ -20,6 +22,7 @@ export function ChatPanel({
   messages,
   isStreaming,
   streamText,
+  toolCalls,
   onSend,
   onStop,
 }: ChatPanelProps) {
@@ -29,7 +32,7 @@ export function ChatPanel({
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, streamText]);
+  }, [messages, streamText, toolCalls]);
 
   const handleSubmit = () => {
     const trimmed = input.trim();
@@ -85,13 +88,33 @@ export function ChatPanel({
           </div>
         ))}
 
+        {isStreaming && toolCalls.length > 0 && (
+          <div className="space-y-1">
+            {toolCalls.map((tc, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-2 text-[#888] text-sm"
+              >
+                {!tc.result && (
+                  <Loader2 className="w-4 h-4 animate-spin shrink-0" />
+                )}
+                <span>
+                  {tc.result
+                    ? `Looked up ${(tc.args as { query: string }).query}`
+                    : `Looking up ${(tc.args as { query: string }).query}...`}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+
         {isStreaming && streamText && (
           <div className="text-[#1a1a1a] text-sm font-medium opacity-70">
             {streamText}
           </div>
         )}
 
-        {isStreaming && !streamText && (
+        {isStreaming && !streamText && toolCalls.length === 0 && (
           <div className="flex items-center gap-2 text-[#888] text-sm">
             <Loader2 className="w-4 h-4 animate-spin" />
             <span>Generating map...</span>
@@ -130,6 +153,15 @@ export function ChatPanel({
             </button>
           )}
         </div>
+        <p className="text-[11px] text-[#aaa] mt-2 text-center">
+          Not satisfied with the map? Reach out to me directly at{" "}
+          <a
+            href="mailto:milindsoni201@gmail.com"
+            className="underline hover:text-[#8b4513] transition-colors"
+          >
+            milindsoni201@gmail.com
+          </a>
+        </p>
       </div>
     </div>
   );

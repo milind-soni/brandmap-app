@@ -12,11 +12,12 @@
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.48",
     "@prisma/client": "^6",
+    "@supabase/supabase-js": "^2.98.0",
     "ai": "^6.0.103",
     "better-auth": "^1.4.19",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "json-maps": "^0.3.0",
+    "json-maps": "0.3.2",
     "lucide-react": "^0.575.0",
     "lz-string": "^1.5.0",
     "maplibre-gl": "^5.19.0",
