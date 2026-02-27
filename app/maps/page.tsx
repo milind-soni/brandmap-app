@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Plus, Trash2, Code } from "lucide-react";
@@ -8,14 +8,41 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { authClient } from "@/lib/auth-client";
 import { EmbedModal } from "@/components/editor/embed-modal";
-import { MapRenderer } from "json-maps";
 import type { Id } from "@/convex/_generated/dataModel";
+
+const CACHE_KEY = "factmaps:maps-cache";
 
 export default function MapsPage() {
   const router = useRouter();
-  const maps = useQuery(api.maps.list);
+  const liveMaps = useQuery(api.maps.list);
   const deleteMap = useMutation(api.maps.remove);
   const { data: session } = authClient.useSession();
+
+  const [cachedMaps, setCachedMaps] = useState<typeof liveMaps>(() => {
+    try {
+      const stored = sessionStorage.getItem(CACHE_KEY);
+      return stored ? JSON.parse(stored) : undefined;
+    } catch {
+      return undefined;
+    }
+  });
+
+  // Update cache when live data arrives
+  const prevLiveMaps = useRef(liveMaps);
+  useEffect(() => {
+    if (liveMaps !== undefined && liveMaps !== prevLiveMaps.current) {
+      prevLiveMaps.current = liveMaps;
+      setCachedMaps(liveMaps);
+      try {
+        sessionStorage.setItem(CACHE_KEY, JSON.stringify(liveMaps));
+      } catch {
+        // Storage full or unavailable
+      }
+    }
+  }, [liveMaps]);
+
+  // Use live data when available, fall back to cache
+  const maps = liveMaps ?? cachedMaps;
 
   const [embedSpec, setEmbedSpec] = useState<object | null>(null);
   const [deletingId, setDeletingId] = useState<Id<"maps"> | null>(null);
@@ -27,13 +54,7 @@ export default function MapsPage() {
     setDeletingId(null);
   };
 
-  if (maps === undefined) {
-    return (
-      <div className="min-h-screen bg-[#f0f0e8] font-mono flex items-center justify-center">
-        <span className="text-[#888]">Loading...</span>
-      </div>
-    );
-  }
+  const isLoading = maps === undefined;
 
   return (
     <div className="min-h-screen bg-[#f0f0e8] font-mono selection:bg-[#8b4513] selection:text-[#f0f0e8]">
@@ -72,7 +93,7 @@ export default function MapsPage() {
         </div>
 
         {/* Empty state */}
-        {maps.length === 0 && (
+        {!isLoading && maps.length === 0 && (
           <div className="text-center py-24 border-2 border-dashed border-[#ccc]">
             <p className="text-xl font-black mb-2">No maps yet.</p>
             <p className="text-sm text-[#888] mb-6">
@@ -90,16 +111,33 @@ export default function MapsPage() {
 
         {/* Map grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {maps.map((map) => (
+          {isLoading && [0, 1, 2].map((i) => (
+            <div
+              key={i}
+              className="bg-white border-2 border-[#1a1a1a] shadow-[4px_4px_0px_0px_#1a1a1a] flex flex-col animate-pulse"
+            >
+              <div className="h-48 bg-[#e0e0d8] border-b-2 border-[#1a1a1a]" />
+              <div className="p-4 flex-1">
+                <div className="h-5 bg-[#e0e0d8] rounded w-3/4 mb-2" />
+                <div className="h-3 bg-[#e0e0d8] rounded w-1/3" />
+              </div>
+              <div className="h-11 border-t-2 border-[#1a1a1a] bg-[#f5f5ed]" />
+            </div>
+          ))}
+          {maps?.map((map) => (
             <div
               key={map._id}
               className="bg-white border-2 border-[#1a1a1a] shadow-[4px_4px_0px_0px_#1a1a1a] flex flex-col"
             >
               {/* Map preview area */}
               <Link href={`/editor/${map._id}`} className="block">
-                <div className="h-48 bg-[#1a1a1a] border-b-2 border-[#1a1a1a] overflow-hidden pointer-events-none">
-                  {map.spec ? (
-                    <MapRenderer spec={map.spec} className="w-full h-full" />
+                <div className="h-48 bg-[#1a1a1a] border-b-2 border-[#1a1a1a] overflow-hidden">
+                  {map.thumbnail ? (
+                    <img
+                      src={map.thumbnail}
+                      alt={map.name}
+                      className="w-full h-full object-cover"
+                    />
                   ) : (
                     <div className="flex items-center justify-center h-full">
                       <span className="text-4xl font-black tracking-tighter text-[#333]">?</span>

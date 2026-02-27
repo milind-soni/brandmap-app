@@ -1,13 +1,15 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import Link from "next/link";
 import { ArrowLeft, Code } from "lucide-react";
 import { MapRenderer, useMapStream, type MapSpec } from "json-maps";
 import { ChatPanel, type ChatMessage } from "@/components/editor/chat-panel";
 import { EmbedModal } from "@/components/editor/embed-modal";
+import { MapScreenshot } from "@/components/map-screenshot";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import type { Id } from "@/convex/_generated/dataModel";
 
 function deriveMapName(prompt: string): string {
   if (!prompt) return "Untitled Map";
@@ -24,10 +26,12 @@ export default function EditorPage() {
   const [embedOpen, setEmbedOpen] = useState(false);
   const [hasGenerated, setHasGenerated] = useState(false);
   const lastPromptRef = useRef("");
+  const savedMapIdRef = useRef<Id<"maps"> | null>(null);
+  const [needsScreenshot, setNeedsScreenshot] = useState(false);
 
   const saveMap = useMutation(api.maps.save);
 
-  const { spec, isStreaming, streamText, toolCalls, send, stop } = useMapStream({
+  const { spec, isStreaming, streamText, toolCalls, send, stop, setSpec } = useMapStream({
     api: "/api/generate",
     onComplete: async (completedSpec: MapSpec) => {
       setHasGenerated(true);
@@ -37,12 +41,19 @@ export default function EditorPage() {
           spec: completedSpec,
           prompt: lastPromptRef.current,
         });
+        savedMapIdRef.current = mapId;
+        setNeedsScreenshot(true);
         window.history.replaceState(null, "", `/editor/${mapId}`);
       } catch {
         // Save failed silently — map still visible in editor
       }
     },
   });
+
+  // Show a default street map on load
+  useEffect(() => {
+    setSpec({ basemap: "streets" } as MapSpec);
+  }, [setSpec]);
 
   const handleSend = useCallback(
     async (prompt: string) => {
@@ -64,6 +75,25 @@ export default function EditorPage() {
   const handleStop = useCallback(() => {
     stop();
   }, [stop]);
+
+  const handleScreenshot = useCallback(
+    async (dataUrl: string) => {
+      setNeedsScreenshot(false);
+      const mapId = savedMapIdRef.current;
+      if (!mapId) return;
+      try {
+        await saveMap({
+          mapId,
+          name: deriveMapName(lastPromptRef.current),
+          spec,
+          thumbnail: dataUrl,
+        });
+      } catch {
+        // Thumbnail save failed silently
+      }
+    },
+    [saveMap, spec],
+  );
 
   const hasSpec = Object.keys(spec).length > 0;
 
@@ -110,7 +140,9 @@ export default function EditorPage() {
         {/* Map preview */}
         <div className="flex-1 bg-[#1a1a1a] relative">
           {hasSpec ? (
-            <MapRenderer spec={spec} className="w-full h-full" />
+            <MapRenderer spec={spec} className="w-full h-full">
+              {needsScreenshot && <MapScreenshot onCapture={handleScreenshot} />}
+            </MapRenderer>
           ) : (
             <div className="flex items-center justify-center h-full text-[#888] text-center px-8">
               <div>

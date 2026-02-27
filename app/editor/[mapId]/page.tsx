@@ -7,6 +7,7 @@ import { ArrowLeft, Code } from "lucide-react";
 import { MapRenderer, useMapStream, type MapSpec } from "json-maps";
 import { ChatPanel, type ChatMessage } from "@/components/editor/chat-panel";
 import { EmbedModal } from "@/components/editor/embed-modal";
+import { MapScreenshot } from "@/components/map-screenshot";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
@@ -22,6 +23,7 @@ export default function EditorMapPage() {
   const [embedOpen, setEmbedOpen] = useState(false);
   const [hasGenerated, setHasGenerated] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [needsScreenshot, setNeedsScreenshot] = useState(false);
 
   const { spec, isStreaming, streamText, toolCalls, send, stop, setSpec } =
     useMapStream({
@@ -34,6 +36,7 @@ export default function EditorMapPage() {
             name: existingMap?.name || "Untitled Map",
             spec: completedSpec,
           });
+          setNeedsScreenshot(true);
         } catch {
           // Save failed silently
         }
@@ -68,6 +71,23 @@ export default function EditorMapPage() {
   const handleStop = useCallback(() => {
     stop();
   }, [stop]);
+
+  const handleScreenshot = useCallback(
+    async (dataUrl: string) => {
+      setNeedsScreenshot(false);
+      try {
+        await saveMap({
+          mapId,
+          name: existingMap?.name || "Untitled Map",
+          spec,
+          thumbnail: dataUrl,
+        });
+      } catch {
+        // Thumbnail save failed silently
+      }
+    },
+    [saveMap, mapId, existingMap?.name, spec],
+  );
 
   if (existingMap === undefined) {
     return (
@@ -133,7 +153,9 @@ export default function EditorMapPage() {
         {/* Map preview */}
         <div className="flex-1 bg-[#1a1a1a] relative">
           {hasSpec ? (
-            <MapRenderer spec={spec} className="w-full h-full" />
+            <MapRenderer spec={spec} className="w-full h-full">
+              {needsScreenshot && <MapScreenshot onCapture={handleScreenshot} />}
+            </MapRenderer>
           ) : (
             <div className="flex items-center justify-center h-full text-[#888] text-center px-8">
               <div>

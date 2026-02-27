@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { getSupabase } from "@/lib/supabase";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 export function EmailSignup({ source = "factmaps" }: { source?: string }) {
   const [email, setEmail] = useState("");
@@ -9,27 +10,20 @@ export function EmailSignup({ source = "factmaps" }: { source?: string }) {
     "idle"
   );
   const [message, setMessage] = useState("");
+  const joinWaitlist = useMutation(api.waitlist.join);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!email.trim()) return;
 
     setState("loading");
-    const { error } = await getSupabase()
-      .from("waitlist")
-      .insert({ email: email.trim().toLowerCase(), source });
-
-    if (error) {
-      if (error.code === "23505") {
-        setState("success");
-        setMessage("You're already on the list!");
-      } else {
-        setState("error");
-        setMessage("Something went wrong. Try again.");
-      }
-    } else {
+    try {
+      const result = await joinWaitlist({ email: email.trim(), source });
       setState("success");
-      setMessage("You're on the list!");
+      setMessage(result.alreadyExists ? "You're already on the list!" : "You're on the list!");
+    } catch {
+      setState("error");
+      setMessage("Something went wrong. Try again.");
     }
   }
 

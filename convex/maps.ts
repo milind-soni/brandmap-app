@@ -1,6 +1,16 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { authComponent } from "./auth";
+import type { GenericQueryCtx } from "convex/server";
+import type { DataModel } from "./_generated/dataModel";
+
+async function getUser(ctx: GenericQueryCtx<DataModel>) {
+  try {
+    return await authComponent.getAuthUser(ctx);
+  } catch {
+    return null;
+  }
+}
 
 export const save = mutation({
   args: {
@@ -8,9 +18,10 @@ export const save = mutation({
     name: v.string(),
     spec: v.any(),
     prompt: v.optional(v.string()),
+    thumbnail: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const user = await authComponent.getAuthUser(ctx);
+    const user = await getUser(ctx);
     if (!user) throw new Error("Unauthorized");
 
     if (args.mapId) {
@@ -22,6 +33,7 @@ export const save = mutation({
         name: args.name,
         spec: args.spec,
         prompt: args.prompt,
+        ...(args.thumbnail ? { thumbnail: args.thumbnail } : {}),
         updatedAt: Date.now(),
       });
       return args.mapId;
@@ -32,6 +44,7 @@ export const save = mutation({
       name: args.name,
       spec: args.spec,
       prompt: args.prompt,
+      thumbnail: args.thumbnail,
       updatedAt: Date.now(),
     });
   },
@@ -40,7 +53,7 @@ export const save = mutation({
 export const get = query({
   args: { mapId: v.id("maps") },
   handler: async (ctx, args) => {
-    const user = await authComponent.getAuthUser(ctx);
+    const user = await getUser(ctx);
     if (!user) return null;
 
     const map = await ctx.db.get(args.mapId);
@@ -52,7 +65,7 @@ export const get = query({
 export const list = query({
   args: {},
   handler: async (ctx) => {
-    const user = await authComponent.getAuthUser(ctx);
+    const user = await getUser(ctx);
     if (!user) return [];
 
     return await ctx.db
@@ -66,7 +79,7 @@ export const list = query({
 export const remove = mutation({
   args: { mapId: v.id("maps") },
   handler: async (ctx, args) => {
-    const user = await authComponent.getAuthUser(ctx);
+    const user = await getUser(ctx);
     if (!user) throw new Error("Unauthorized");
 
     const map = await ctx.db.get(args.mapId);
@@ -83,7 +96,7 @@ export const rename = mutation({
     name: v.string(),
   },
   handler: async (ctx, args) => {
-    const user = await authComponent.getAuthUser(ctx);
+    const user = await getUser(ctx);
     if (!user) throw new Error("Unauthorized");
 
     const map = await ctx.db.get(args.mapId);

@@ -7,6 +7,7 @@ export default defineSchema({
     name: v.string(),
     spec: v.any(),
     prompt: v.optional(v.string()),
+    thumbnail: v.optional(v.string()),
     updatedAt: v.number(),
   })
     .index("by_user", ["userId"])
@@ -16,4 +17,10 @@ export default defineSchema({
     userId: v.string(),
     timestamp: v.number(),
   }).index("by_user_timestamp", ["userId", "timestamp"]),
+
+  waitlist: defineTable({
+    email: v.string(),
+    source: v.string(),
+    timestamp: v.number(),
+  }).index("by_email", ["email"]),
 });

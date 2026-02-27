@@ -1,5 +1,15 @@
 import { mutation, query } from "./_generated/server";
 import { authComponent } from "./auth";
+import type { GenericQueryCtx } from "convex/server";
+import type { DataModel } from "./_generated/dataModel";
+
+async function getUser(ctx: GenericQueryCtx<DataModel>) {
+  try {
+    return await authComponent.getAuthUser(ctx);
+  } catch {
+    return null;
+  }
+}
 
 const MAX_GENERATIONS_PER_DAY = 50;
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -7,7 +17,7 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 export const canGenerate = query({
   args: {},
   handler: async (ctx) => {
-    const user = await authComponent.getAuthUser(ctx);
+    const user = await getUser(ctx);
     if (!user) return { allowed: false, remaining: 0, used: 0, limit: MAX_GENERATIONS_PER_DAY };
 
     const dayAgo = Date.now() - DAY_MS;
@@ -31,7 +41,7 @@ export const canGenerate = query({
 export const logGeneration = mutation({
   args: {},
   handler: async (ctx) => {
-    const user = await authComponent.getAuthUser(ctx);
+    const user = await getUser(ctx);
     if (!user) throw new Error("Unauthorized");
 
     const dayAgo = Date.now() - DAY_MS;

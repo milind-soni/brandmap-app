@@ -12,6 +12,7 @@ import type * as auth from "../auth.js";
 import type * as http from "../http.js";
 import type * as maps from "../maps.js";
 import type * as rateLimit from "../rateLimit.js";
+import type * as waitlist from "../waitlist.js";
 
 import type {
   ApiFromModules,
@@ -24,6 +25,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   maps: typeof maps;
   rateLimit: typeof rateLimit;
+  waitlist: typeof waitlist;
 }>;
 
 /**

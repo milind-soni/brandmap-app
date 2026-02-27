@@ -5,7 +5,7 @@ const http = httpRouter();
 
 authComponent.registerRoutes(http, createAuth, {
   cors: {
-    allowedOrigins: ["http://localhost:3000", "https://factmaps.io"],
+    allowedOrigins: ["http://localhost:3000", "https://factmaps.io", "https://www.factmaps.io"],
   },
 });
 
