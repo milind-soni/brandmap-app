@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "brandmap — Beautiful branded maps for your website",
+  title: "factmaps — Beautiful maps created with AI",
   description:
-    "Create embeddable maps that match your brand. Custom colors, no code, flat pricing. Stop using ugly Google Maps embeds.",
+    "Create beautiful embeddable maps with AI. One prompt, embed anywhere. Custom colors, no code, flat pricing.",
 };
 
 export default function RootLayout({
