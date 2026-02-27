@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
 
 export function EmailSignup({ source = "factmaps" }: { source?: string }) {
   const [email, setEmail] = useState("");
@@ -15,7 +15,7 @@ export function EmailSignup({ source = "factmaps" }: { source?: string }) {
     if (!email.trim()) return;
 
     setState("loading");
-    const { error } = await supabase
+    const { error } = await getSupabase()
       .from("waitlist")
       .insert({ email: email.trim().toLowerCase(), source });
 
@@ -47,7 +47,7 @@ export function EmailSignup({ source = "factmaps" }: { source?: string }) {
         placeholder="you@email.com"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="flex-1 px-5 py-4 border-2 border-[#1a1a1a] bg-[#f0f0e8] font-mono text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#8b4513] focus:ring-offset-2 placeholder:text-[#aaa]"
+        className="flex-1 px-5 py-4 border-2 border-[#1a1a1a] bg-[#f0f0e8] text-[#1a1a1a] font-mono text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#8b4513] focus:ring-offset-2 placeholder:text-[#aaa]"
       />
       <button
         type="submit"

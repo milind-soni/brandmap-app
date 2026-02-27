@@ -28,14 +28,14 @@ export default function SignUpPage() {
       setError(error.message || "Sign up failed");
       setLoading(false);
     } else {
-      router.push("/editor");
+      router.push("/maps");
     }
   };
 
   const handleGoogle = async () => {
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: "/editor",
+      callbackURL: "/maps",
     });
   };
 

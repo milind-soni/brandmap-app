@@ -1,52 +1,56 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Code } from "lucide-react";
 import { MapRenderer, useMapStream, type MapSpec } from "json-maps";
 import { ChatPanel, type ChatMessage } from "@/components/editor/chat-panel";
 import { EmbedModal } from "@/components/editor/embed-modal";
-import { useMutation } from "convex/react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import type { Id } from "@/convex/_generated/dataModel";
 
-function deriveMapName(prompt: string): string {
-  if (!prompt) return "Untitled Map";
-  const truncated = prompt.slice(0, 50);
-  return (
-    truncated.charAt(0).toUpperCase() +
-    truncated.slice(1) +
-    (prompt.length > 50 ? "..." : "")
-  );
-}
+export default function EditorMapPage() {
+  const params = useParams();
+  const mapId = params.mapId as Id<"maps">;
 
-export default function EditorPage() {
+  const existingMap = useQuery(api.maps.get, { mapId });
+  const saveMap = useMutation(api.maps.save);
+
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [embedOpen, setEmbedOpen] = useState(false);
   const [hasGenerated, setHasGenerated] = useState(false);
-  const lastPromptRef = useRef("");
+  const [loaded, setLoaded] = useState(false);
 
-  const saveMap = useMutation(api.maps.save);
+  const { spec, isStreaming, streamText, toolCalls, send, stop, setSpec } =
+    useMapStream({
+      api: "/api/generate",
+      onComplete: async (completedSpec: MapSpec) => {
+        setHasGenerated(true);
+        try {
+          await saveMap({
+            mapId,
+            name: existingMap?.name || "Untitled Map",
+            spec: completedSpec,
+          });
+        } catch {
+          // Save failed silently
+        }
+      },
+    });
 
-  const { spec, isStreaming, streamText, toolCalls, send, stop } = useMapStream({
-    api: "/api/generate",
-    onComplete: async (completedSpec: MapSpec) => {
+  // Load existing map spec once
+  useEffect(() => {
+    if (existingMap?.spec && !loaded) {
+      setSpec(existingMap.spec as MapSpec);
       setHasGenerated(true);
-      try {
-        const mapId = await saveMap({
-          name: deriveMapName(lastPromptRef.current),
-          spec: completedSpec,
-          prompt: lastPromptRef.current,
-        });
-        window.history.replaceState(null, "", `/editor/${mapId}`);
-      } catch {
-        // Save failed silently — map still visible in editor
-      }
-    },
-  });
+      setLoaded(true);
+    }
+  }, [existingMap, loaded, setSpec]);
 
   const handleSend = useCallback(
     async (prompt: string) => {
-      lastPromptRef.current = prompt;
       setMessages((prev) => [...prev, { role: "user", content: prompt }]);
 
       const isRefinement = hasGenerated && Object.keys(spec).length > 0;
@@ -65,6 +69,22 @@ export default function EditorPage() {
     stop();
   }, [stop]);
 
+  if (existingMap === undefined) {
+    return (
+      <div className="h-screen flex items-center justify-center font-mono bg-[#f0f0e8]">
+        <span className="text-[#888]">Loading map...</span>
+      </div>
+    );
+  }
+
+  if (existingMap === null) {
+    return (
+      <div className="h-screen flex items-center justify-center font-mono bg-[#f0f0e8]">
+        <span className="text-[#888]">Map not found.</span>
+      </div>
+    );
+  }
+
   const hasSpec = Object.keys(spec).length > 0;
 
   return (
@@ -81,6 +101,9 @@ export default function EditorPage() {
           </Link>
           <span className="text-xl font-black tracking-tighter">
             factmaps.
+          </span>
+          <span className="text-sm text-[#888] truncate max-w-[200px]">
+            {existingMap.name}
           </span>
         </div>
         <button

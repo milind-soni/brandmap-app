@@ -55,14 +55,14 @@ export default function Homepage() {
                 Sign out
               </button>
               <Link
-                href="/editor"
+                href="/maps"
                 className={`px-4 py-2 border-2 transition-colors ${
                   scrolled
                     ? "border-[#1a1a1a] hover:bg-[#1a1a1a] hover:text-[#f0f0e8]"
                     : "border-[#f0f0e8] hover:bg-[#f0f0e8] hover:text-[#1a1a1a]"
                 }`}
               >
-                Editor
+                My Maps
               </Link>
             </>
           ) : (
