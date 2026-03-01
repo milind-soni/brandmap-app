@@ -11,6 +11,11 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
   return betterAuth({
     baseURL: process.env.SITE_URL,
     secret: process.env.BETTER_AUTH_SECRET,
+    trustedOrigins: [
+      "https://www.factmaps.io",
+      "https://factmaps-app.vercel.app",
+      "http://localhost:3000",
+    ],
     database: authComponent.adapter(ctx),
     emailAndPassword: { enabled: true },
     socialProviders: {
