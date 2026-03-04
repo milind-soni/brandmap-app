@@ -41,15 +41,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <script
-          defer
-          data-website-id="dfid_UGOD26GZoKOkpDsbjO8BH"
-          data-domain="www.factmaps.io"
-          data-allow-localhost="true"
-          src="https://datafa.st/js/script.js"
-        />
-      </head>
       <body>
         <ConvexClientProvider>
           <PostHogProvider>{children}</PostHogProvider>
